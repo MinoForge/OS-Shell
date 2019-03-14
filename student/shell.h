@@ -29,7 +29,7 @@
 
 
     void   parse_args(char** , char** , int*);
-    void   proccess_line(char** , int* , char**);
+    void   process_line(char **, int *, char **);
 #endif
 
 

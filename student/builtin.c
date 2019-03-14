@@ -1,4 +1,4 @@
-#include "shell.h"
+    #include "shell.h"
 
 /**
  * do_file_list
@@ -89,13 +89,11 @@ void do_touch(char** args) {
 void do_history(char** args) {
     /*                                                                          
      * TODO: Write code here that will print the last n commands executed via this shell.
-     */                                                                         
-
-
-
-
-
-
-
+     */
+    queue_t *hist = get_history();
+    hist->print(hist);
 
 }
+
+
+//TODO Make a main, that picks the right thing?

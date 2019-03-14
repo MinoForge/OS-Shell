@@ -105,7 +105,7 @@ int main(void) {
 
                 if (CHILD_PID(childPid)) {
                     /* The child shell continues to process the command line */
-                    proccess_line(line, &lineIndex, args);
+                    process_line(line, &lineIndex, args);
                 } else {
                     /*
                      * TODO:  Write code here to wait for the child process to die.  When the
@@ -136,7 +136,7 @@ int main(void) {
 
 
 /*
- * proccess_line
+ * process_line
  *
  * This processes thr remainder of a line read in from the user.  This processing can include
  * append redirection, stderr redirection, etc.  Note that this function operates recursively; it
@@ -151,7 +151,7 @@ int main(void) {
  *             arguments for a process (i.e., stuff that was already parsed
  *             off of line).
  */
-void proccess_line(char** line, int* lineIndex, char** args) {
+void process_line(char **line, int *lineIndex, char **args) {
     if (line[*lineIndex] == NULL) { /* Base case -- nothing left in line */
         /*
          * TEST?? TODO:  We've read the end of a command line.  Here args is an array of strings
@@ -175,40 +175,40 @@ void proccess_line(char** line, int* lineIndex, char** args) {
         append_redirection(line[*lineIndex]);
 
         (*lineIndex)++;
-        proccess_line(line, lineIndex, args);
+        process_line(line, lineIndex, args);
 
     } else if (strcmp(line[*lineIndex], "2>") == 0) {
         (*lineIndex)++;
         stderr_redirection(line[*lineIndex]);
 
         (*lineIndex)++;
-        proccess_line(line, lineIndex, args);
+        process_line(line, lineIndex, args);
 
     } else if (strcmp(line[*lineIndex], "&>") == 0) {
         (*lineIndex)++;
         stdout_stderr_redirection(line[*lineIndex]);
 
         (*lineIndex)++;
-        proccess_line(line, lineIndex, args);
+        process_line(line, lineIndex, args);
 
     } else if (strcmp(line[*lineIndex], ">") == 0) {
         (*lineIndex)++;
         stdout_redirection(line[*lineIndex]);
 
         (*lineIndex)++;
-        proccess_line(line, lineIndex, args);
+        process_line(line, lineIndex, args);
 
     } else if (strcmp(line[*lineIndex], "<") == 0) {
         (*lineIndex)++;
         stdin_redirection(line[*lineIndex]);
 
         (*lineIndex)++;
-        proccess_line(line, lineIndex, args);
+        process_line(line, lineIndex, args);
 
     } else if (strcmp(line[*lineIndex], "|") == 0) {
         (*lineIndex)++;
         do_pipe(args, line, lineIndex);
-        /* do_pipe() calls proccess_line() only in some cases */
+        /* do_pipe() calls process_line() only in some cases */
     }
 }
 
@@ -273,7 +273,7 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
         parse_args(args, line, lineIndex);
 
         /* And keep going... */
-        proccess_line(line, lineIndex, args);
+        process_line(line, lineIndex, args);
     }
 }
 
