@@ -48,6 +48,16 @@
  */
 static pid_t childPid = 0;
 
+
+void signal_handler(int sig){
+    if(childPid != 0){
+        kill(childPid, SIGKILL);
+        childPid = 0;
+    }
+}
+
+
+
 /*
  * Entry point of the application
  */
@@ -55,12 +65,13 @@ int main(void) {
     char** line;
 
     /*
-     * TODO:  Define a signal handler function below, add a function prototype above, and call the
+     * TEST  TODO:  Define a signal handler function below, add a function prototype above, and call the
      * 'signal' system call here to put that handler in place for the SIGINT signal.  (The SIGINT
      * signal is what gets sent to a process when you hit Ctrl-C).  The implementation of your
      * signal hander should deliver the received signal to the process with pid 'childPid'
      * (above).  Note that when 'childPid' contains 0, the signal should be ignored.
      */
+    signal(SIGINT, signal_handler);
 
     /* Read a line of input from the keyboard */
     line = prompt_and_read();
@@ -105,14 +116,11 @@ int main(void) {
                      *        Where 123 here is the process id of the child and 0 is the exit
                      *        status of that process.
                      */
-
-
-
-
-
-
-
-
+                    int status = 0;
+                    pid_t reaped = wait(&status);
+                    printf("Child %d exited with status %d", (int)reaped, status);
+                    
+                   
 
                 }
             }
@@ -146,12 +154,16 @@ int main(void) {
 void proccess_line(char** line, int* lineIndex, char** args) {
     if (line[*lineIndex] == NULL) { /* Base case -- nothing left in line */
         /*
-         * TODO:  We've read the end of a command line.  Here args is an array of strings
+         * TEST?? TODO:  We've read the end of a command line.  Here args is an array of strings
          * corresponding to the command line arguments of a process that needs to get started.
          * Replace the call to the 'exit' system call below with code to replace this in-memory
          * process image with an instance of the specified program.
          */
-
+        if(childPid != 0){
+            
+            /* TODO: ask about execvp()  */
+            execvp(line[0], args);
+        }
 
 
 
@@ -330,8 +342,13 @@ void pipe_wrapper(int pipefds[]) {
      * is less than 0, use perror() to print an error message and the _exit system call to
      * terminate the program.                                             
      */                                                                         
-
-
+    int p = pipe(pipefds);
+    
+    if(p < 0){
+        perror("pipe");
+        _exit(1);
+    }
+    
 
 
 
@@ -349,8 +366,12 @@ int dup_wrapper(int oldfd) {
      * nothing has gone wrong.  Check the return value of dup -- if it is less than 0, use perror()
      * to print an error message and the _exit system call to terminate the program.
      */                                                                         
-
-
+    int newfd;
+    if(newfd = dup(oldfd) < 0){
+        perror("dup");
+        _exit(1);
+    }
+    
 
 
 
