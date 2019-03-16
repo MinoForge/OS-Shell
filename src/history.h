@@ -1,7 +1,7 @@
 //
 // Created by psgardner on 3/14/2019.
 //
-#include "../queue/Queue.h"
+#include "Queue.h"
 
 #ifndef OS_SHELL_HISTORY_H
     #define OS_SHELL_HISTORY_H

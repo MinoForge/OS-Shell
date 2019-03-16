@@ -14,7 +14,7 @@
     #include <dirent.h>
     #include "shellParser.h"
     #include "history.h"
-    #include "../queue/LinkedQueue.h"
+    #include "LinkedQueue.h"
 
 
     /* Macros to test whether a process ID is a parent's or a child's. */

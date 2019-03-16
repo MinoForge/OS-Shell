@@ -50,7 +50,11 @@ static pid_t childPid = 0;
 
 
 void signal_handler(int sig){
+    if(sig != SIGINT) {
+        printf("Intercepted SIGINT, but was not passed SIGINT."); //Added to make -Wall happy
+    }
     if(childPid != 0){
+
         kill(childPid, SIGKILL);
         childPid = 0;
     }
@@ -89,7 +93,7 @@ int main(void) {
             parse_args(args, line, &lineIndex);
 
             /* TODO: Somewhere here remember commands executed*/
-            do_history(args);
+            write_history(*line);
 
             /* Determine which command we are running*/
             if (strcmp(args[0], "ls") == 0) {
@@ -117,7 +121,7 @@ int main(void) {
                      *        Where 123 here is the process id of the child and 0 is the exit
                      *        status of that process.
                      */
-                    int status = 0;
+                    status = 0;
                     pid_t reaped = wait(&status);
                     printf("Child %d exited with status %d", (int)reaped, status);
                     
@@ -166,7 +170,7 @@ void process_line(char **line, int *lineIndex, char **args) {
         if(childPid != 0){
             
             /* TODO: ask about execvp()  */
-            execvp(builtin, args);
+//            execvp(builtin, args);
         }
 
 
@@ -262,7 +266,7 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          * below with code to replace this in-memeory process image with an instance of the
          * specified program.  (Here, in p1Args)
          */
-        execvp(builtin, p1Args);
+//        execvp(builtin, p1Args);
         
         
         
@@ -282,7 +286,7 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
         int in = dup(0);
         /* Might change to STDOUT_FILENO */
         close(0);
-        dup2(pipefd[1], 0);      
+        dup2(pipefd[1], 0);
         
 
 
@@ -387,13 +391,11 @@ int dup_wrapper(int oldfd) {
      * to print an error message and the _exit system call to terminate the program.
      */                                                                         
     int newfd;
-    if(newfd = dup(oldfd) < 0){
+    if((newfd = dup(oldfd)) < 0){
         perror("dup");
         _exit(1);
     }
-    
-
-
+    return newfd;
 
 }
 

@@ -14,7 +14,7 @@ typedef struct LinkedQueue LinkedQueue;
 
 /** This struct defines a one-directional node for the linked list. */
 struct Node {
-    char **data;
+    char *data;
     Node *next;
 };
 
@@ -25,14 +25,14 @@ struct LinkedQueue {
     size_t size;
 };
 
-static Node *newNode(char**, Node*);
+static Node *newNode(char*, Node*);
 static void deleteNode(Node*);
 
-static void linkedQueueEnqueue(queue_t *, char**);
+static void linkedQueueEnqueue(queue_t *, char*);
 static void linkedQueueDequeue(queue_t *);
 static void linkedQueuePrint(queue_t *);
 static size_t linkedQueueSize(queue_t *);
-static char** linkedQueuePeek(queue_t *);
+static char* linkedQueuePeek(queue_t *);
 
 /**
  * Function for adding a new node to the tail of the queue. Can technically be used to insert anywhere with some work.
@@ -40,7 +40,7 @@ static char** linkedQueuePeek(queue_t *);
  * @param nextNode A pointer to the node after the one being made.
  * @return A pointer to the newly created node.
  */
-static Node *newNode(char **newData, Node* nextNode) {
+static Node *newNode(char *newData, Node* nextNode) {
     Node *node;
     node = Malloc(sizeof(Node));
 
@@ -106,7 +106,7 @@ void deleteLinkedQueue(queue_t *queue){
  * @param queue A pointer to the given queue.
  * @param data The data to be added.
  */
-static void linkedQueueEnqueue(queue_t *queue, char **data) {
+static void linkedQueueEnqueue(queue_t *queue, char *data) {
     LinkedQueue *lQueue;
     lQueue = queue->private_data;
     if(lQueue->tail == NULL || lQueue->head == NULL) {
@@ -128,7 +128,7 @@ static void linkedQueueEnqueue(queue_t *queue, char **data) {
  * @param queue The queue being looked at.
  * @return The integer in the first place of the queue.
  */
-static char** linkedQueuePeek(queue_t *queue) {
+static char* linkedQueuePeek(queue_t *queue) {
     return ((LinkedQueue *)queue->private_data)->head->data;
 }
 
@@ -171,7 +171,7 @@ static void linkedQueuePrint(queue_t *queue) {
     int i = 0;
 
     while(temp != NULL) {
-        printf("%d: %s\n", i, *(temp->data));
+        printf("%d: %s\n", i++, (temp->data));
         temp = temp->next;
         /*if(temp != NULL) {
             printf(", ");

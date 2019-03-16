@@ -129,6 +129,9 @@ void do_history(char** args) {
     /*                                                                          
      * TODO: Write code here that will print the last n commands executed via this shell.
      */
+    if(args[1] != NULL) {
+        printf("Ignoring extraneous arguments to history():\n");
+    }
     queue_t *hist = get_history();
     hist->print(hist);
 

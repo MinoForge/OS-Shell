@@ -16,7 +16,9 @@ void append_redirection(char* filename) {
     /*int out = dup(1);*/
     close(1);
     int fd = open(filename, O_APPEND);
-
+    if(fd == -1) {
+        printf("Error opening file for writing.");
+    }
 }
 
 /*
@@ -35,7 +37,9 @@ void stdout_redirection(char* filename) {
 
     close(1);
     int fd = open(filename, O_TRUNC);
-
+    if(fd == -1) {
+        printf("Error opening file for writing.");
+    }
 }
 /*
  * stderr_redirection
@@ -53,7 +57,9 @@ void stderr_redirection(char* filename) {
 
     close(2);
     int fd = open(filename, O_TRUNC);
-
+    if(fd == -1) {
+        printf("Error opening file for writing.");
+    }
 }
 
 /*
@@ -74,6 +80,9 @@ void stdout_stderr_redirection(char* filename) {
     close(1);
     close(2);
     int fd = open(filename, O_TRUNC);
+    if(fd == -1) {
+        printf("Error opening file for writing.");
+    }
     dup2(fd, 2);
 
 }
@@ -92,6 +101,8 @@ void stdin_redirection(char* filename) {
 
     close(0);
     int fd = open(filename, O_RDONLY);
-
+    if(fd == -1) {
+        printf("Error opening file for reading.");
+    }
 }
 
