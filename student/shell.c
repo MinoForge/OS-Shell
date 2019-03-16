@@ -162,7 +162,7 @@ void process_line(char **line, int *lineIndex, char **args) {
         if(childPid != 0){
             
             /* TODO: ask about execvp()  */
-            execvp(line[0], args);
+            execvp(builtin, args);
         }
 
 
@@ -232,6 +232,7 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
      * TODO: Write code here that will create a pipe -- a unidirectional data channel that can be
      * used for interprocess communication.
      */
+    pipe(pipefd);
 
     /* Fork the current process */
     pid = fork_wrapper();
@@ -242,7 +243,11 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          * connect this processes standard output stream to the output side of the pipe in pipefd.
          * Close any unnecessary file descriptors.
          */
-
+        int out = dup(1);
+        /* Might change to STDOUT_FILENO */
+        close(1);
+        dup2(pipefd[0], 1);      
+        
 
 
 
@@ -253,6 +258,13 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          * below with code to replace this in-memeory process image with an instance of the
          * specified program.  (Here, in p1Args)
          */
+        execvp(builtin, p1Args);
+        
+        
+        
+        close(1);
+        dup2(out, 1);
+        close(out);
         _exit(1);
 
     } else {  /* Parent will keep going */
@@ -263,7 +275,11 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          * connect this processes standard input stream to the input side of the pipe in pipefd.
          * Close any unnecessary file descriptors.
          */
-
+        int in = dup(0);
+        /* Might change to STDOUT_FILENO */
+        close(0);
+        dup2(pipefd[1], 0);      
+        
 
 
 
