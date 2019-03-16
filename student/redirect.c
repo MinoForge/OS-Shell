@@ -13,10 +13,9 @@ void append_redirection(char* filename) {
      * the specified name.  The output should be appended to the file if the file already exists.
      */
 
-
-
-
-
+    /*int out = dup(1);*/
+    close(1);
+    int fd = open(filename, O_APPEND);
 
 }
 
@@ -34,10 +33,8 @@ void stdout_redirection(char* filename) {
      * this process writes to the file.
      */
 
-
-
-
-
+    close(1);
+    int fd = open(filename, O_TRUNC);
 
 }
 /*
@@ -54,10 +51,8 @@ void stderr_redirection(char* filename) {
      * process writes to the file.
      */
 
-
-
-
-
+    close(2);
+    int fd = open(filename, O_TRUNC);
 
 }
 
@@ -76,11 +71,10 @@ void stdout_stderr_redirection(char* filename) {
      * truncated before this process writes to the file.
      */
 
-
-
-
-
-
+    close(1);
+    close(2);
+    int fd = open(filename, O_TRUNC);
+    dup2(fd, 2);
 
 }
 /*
@@ -96,9 +90,8 @@ void stdin_redirection(char* filename) {
      * the specified name.
      */
 
-
-
-
+    close(0);
+    int fd = open(filename, O_RDONLY);
 
 }
 
