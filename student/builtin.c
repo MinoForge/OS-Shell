@@ -1,5 +1,5 @@
     #include "shell.h"
-
+    
 /**
  * do_file_list
  *
@@ -13,26 +13,31 @@ void do_file_list(char** args) {
     /*                                                                          
      * TODO: Write code here that will list the content of the specified directory (or if no
      * directory was specified, the current directory).
-     */                                                                         
-
-
-
-
-
-
-
-
-
-
-
-
+     */                 
+    DIR *dir = NULL;
+    struct dirent *read = NULL;
+    
+    if(args[1] == NULL){
+        dir = opendir("./");
+    } else{
+        dir = opendir(args[1]);
+        if(dir == NULL){
+            printf("The directory %s does not exist\n", args[1]);
+        }
+    }
+    
+    read = readdir(dir);
+    while(read != NULL){
+        printf("%s\n", read->d_name);
+        read = readdir(dir);
+    }
 
 }
 
 /**
  * do_file_remove
  *
- * Implements a built-in version of the 'rm' command.
+ * Implements a built-in version of the 'rm' command.q
  *
  * args - An array of strings corresponding to the command and its arguments.
  *        args[0] is "rm", additional arguments are in args[1] ... n.
@@ -42,8 +47,21 @@ void do_file_remove(char** args) {
     /*                                                                          
      * TODO: Write code here that will remove the specified list of files.  If no file list is
      * specified, print a usage message.
-     */                                                                         
-
+     */      
+    int i = 1;
+    
+    if(args[1] == NULL){
+        printf("Must provide the pathname of the file to be deleted.");
+        _exit(1);
+    }else{
+        while(args[i] != NULL){
+            if((unlink(args[i])) < 0){
+                printf("\"%s\" does not exist.", args[i]);
+            }
+            i++;
+        }
+        
+    }
 
 
 
