@@ -167,15 +167,16 @@ static void linkedQueuePrint(queue_t *queue) {
     Node *temp;
     lQueue = queue->private_data;
     temp = lQueue->head;
-    printf("[");
+    /*printf("[");*/
+    int i = 0;
 
     while(temp != NULL) {
-        printf("%s", *(temp->data));
+        printf("%d: %s\n", i, *(temp->data));
         temp = temp->next;
-        if(temp != NULL) {
+        /*if(temp != NULL) {
             printf(", ");
-        }
+        }*/
     }
 
-    printf("]\n");
+    /*printf("]\n");*/
 }

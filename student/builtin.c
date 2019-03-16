@@ -65,7 +65,28 @@ void do_touch(char** args) {
      * TODO: Write code here that will modify the access time of a file(s) if it exists, or create
      * the file(s) if it/they does not exist.  If no file list is specified, print a usage message.
      */                                                                         
+    int i = 1;
+    int status = 0;
+    struct stat stat_struct;
+    struct utimbuf curr_time;
 
+    if(args[i] == NULL) {
+        printf("USAGE: touch <filename> [addtl_files]\n");
+    }
+
+    while(args[i] != NULL) {
+        status = stat(args[i], &stat_struct);
+
+        if(status == -1) {
+            status = close(open(args[i], O_CREAT));
+            if(status == -1) {
+                printf("You do not have permission to create files in this directory.\n");
+            }
+        }
+
+        utime(args[i], &curr_time);
+        i++;
+    }
 
 
 
