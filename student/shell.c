@@ -131,6 +131,9 @@ int main(void) {
         line = prompt_and_read();
     }
 
+    /* TODO Added to clean up history */
+    deleteLinkedQueue(get_history());
+
     /* User must have typed "exit", time to gracefully exit. */
     return 0;
 }

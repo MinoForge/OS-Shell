@@ -22,3 +22,4 @@ void write_history(char* new_line) {
 queue_t *get_history() {
     return history;
 }
+
