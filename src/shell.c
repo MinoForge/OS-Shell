@@ -111,7 +111,7 @@ int main(void) {
 
                 if (CHILD_PID(childPid)) {
                     /* The child shell continues to process the command line */
-                    printf("%s", "Child started");
+//                    printf("%s", "Child started");
                     process_line(line, &lineIndex, args);
                 } else {
 
@@ -171,20 +171,10 @@ void process_line(char **line, int *lineIndex, char **args) {
          * Replace the call to the 'exit' system call below with code to replace this in-memory
          * process image with an instance of the specified program.
          */
-//        if(childPid != 0){
-        printf("%s", "Entering base process_line\n");
-        int i;
-        i = 0;
-//            printf("%s", "Hello there");
-        while(args[i] != NULL) {
-            printf("%s", args[i++]);
+        if(execvp(args[0], args)) {
+            _exit(1);
         }
-        /* TODO: ask about execvp()  */
-        execvp(args[0], args);
-//        }
-//        int status;
-//        wait(&status);
-//        _exit(1);
+
     } else if (strcmp(line[*lineIndex], ">>") == 0) {
         (*lineIndex)++;
         append_redirection(line[*lineIndex]);
@@ -258,7 +248,7 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          * connect this processes standard output stream to the output side of the pipe in pipefd.
          * Close any unnecessary file descriptors.
          */
-        int out = dup(1);
+//        int out = dup(1);
         /* Might change to STDOUT_FILENO */
         close(1);
         dup2(pipefd[0], 1);      
@@ -273,13 +263,15 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          * below with code to replace this in-memeory process image with an instance of the
          * specified program.  (Here, in p1Args)
          */
-        execvp(p1Args[0], p1Args);
+        if(execvp(p1Args[0], p1Args)) {
+            _exit(2);
+        }
         
         
         
-        close(1);
-        dup2(out, 1);
-        close(out);
+//        close(1);
+//        dup2(out, 1);
+//        close(out);
 //        _exit(1);
 
     } else {  /* Parent will keep going */
@@ -290,7 +282,7 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          * connect this processes standard input stream to the input side of the pipe in pipefd.
          * Close any unnecessary file descriptors.
          */
-        int in = dup(0);
+//        int in = dup(0);
         /* Might change to STDOUT_FILENO */
         close(0);
         dup2(pipefd[1], 0);
