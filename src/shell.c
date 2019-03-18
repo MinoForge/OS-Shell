@@ -108,10 +108,13 @@ int main(void) {
                 /* Fork off a child process */
                 childPid = fork_wrapper();
 
+
                 if (CHILD_PID(childPid)) {
                     /* The child shell continues to process the command line */
+                    printf("%s", "Child started");
                     process_line(line, &lineIndex, args);
                 } else {
+
                     /*
                      * TODO:  Write code here to wait for the child process to die.  When the
                      * child finally does die, include a printf that prints a message like:
@@ -123,7 +126,7 @@ int main(void) {
                      */
                     status = 0;
                     pid_t reaped = wait(&status);
-                    printf("Child %d exited with status %d", (int)reaped, status);
+                    printf("Child %d exited with status %d\n", (int)reaped, status);
                     
                    
 
@@ -137,6 +140,7 @@ int main(void) {
 
     /* TODO Added to clean up history */
     deleteLinkedQueue(get_history());
+//    free(get_history());
 
     /* User must have typed "exit", time to gracefully exit. */
     return 0;
@@ -167,17 +171,20 @@ void process_line(char **line, int *lineIndex, char **args) {
          * Replace the call to the 'exit' system call below with code to replace this in-memory
          * process image with an instance of the specified program.
          */
-        if(childPid != 0){
-            
-            /* TODO: ask about execvp()  */
-//            execvp(builtin, args);
+//        if(childPid != 0){
+        printf("%s", "Entering base process_line\n");
+        int i;
+        i = 0;
+//            printf("%s", "Hello there");
+        while(args[i] != NULL) {
+            printf("%s", args[i++]);
         }
-
-
-
-
-
-        _exit(1);
+        /* TODO: ask about execvp()  */
+        execvp(args[0], args);
+//        }
+//        int status;
+//        wait(&status);
+//        _exit(1);
     } else if (strcmp(line[*lineIndex], ">>") == 0) {
         (*lineIndex)++;
         append_redirection(line[*lineIndex]);
@@ -266,14 +273,14 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          * below with code to replace this in-memeory process image with an instance of the
          * specified program.  (Here, in p1Args)
          */
-//        execvp(builtin, p1Args);
+        execvp(p1Args[0], p1Args);
         
         
         
         close(1);
         dup2(out, 1);
         close(out);
-        _exit(1);
+//        _exit(1);
 
     } else {  /* Parent will keep going */
         char* args[MAX_ARGS];

@@ -154,7 +154,6 @@ PIPE         [|]
  */
 char** getArgList(void) {
     int i;
-
     /*
      * Free any dynamically allocated buffers from previous invocations of getArgList()
      */
@@ -163,14 +162,13 @@ char** getArgList(void) {
             free(arguments[i]);
         }
     }
-    
+
     /* Reset our state */
     argumentCount = 0;
     arguments[0]  = NULL;
 
     /* Scan until one of the rules returns a value */
     yylex();
-
     return arguments;
 }
 

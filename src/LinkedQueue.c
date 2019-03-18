@@ -165,17 +165,21 @@ static size_t linkedQueueSize(queue_t *queue) {
 static void linkedQueuePrint(queue_t *queue) {
     LinkedQueue *lQueue;
     Node *temp;
-    lQueue = queue->private_data;
-    temp = lQueue->head;
-    /*printf("[");*/
-    int i = 0;
+    if(queue->private_data != NULL) {
+        lQueue = queue->private_data;
+        temp = lQueue->head;
+        /*printf("[");*/
+        int i = 0;
 
-    while(temp != NULL) {
-        printf("%d: %s\n", i++, (temp->data));
-        temp = temp->next;
-        /*if(temp != NULL) {
-            printf(", ");
-        }*/
+        while (temp != NULL) {
+            printf("%d: %s\n", i++, (temp->data));
+            temp = temp->next;
+            /*if(temp != NULL) {
+                printf(", ");
+            }*/
+        }
+    } else {
+        printf("%s", "No history to print.\n");
     }
 
     /*printf("]\n");*/

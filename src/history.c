@@ -10,10 +10,9 @@ queue_t history;
 
 void write_history(char* new_line) {
     if(history.private_data == NULL) {
-
         newLinkedQueue(&history);
     }
-    char* line = Calloc(strlen(new_line), sizeof(char));
+    char* line = Calloc(strlen(new_line)+1, sizeof(char));
     strcpy(line, new_line);
     history.enqueue(&history, line);
     if(history.size(&history) > 40) {
