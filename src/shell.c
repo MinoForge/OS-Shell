@@ -54,9 +54,8 @@ void signal_handler(int sig){
         printf("Intercepted SIGINT, but was not passed SIGINT."); //Added to make -Wall happy
     }
     if(childPid != 0){
-
         kill(childPid, SIGKILL);
-        childPid = 0;
+//        childPid = 0;
     }
 }
 
@@ -250,7 +249,7 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          * Close any unnecessary file descriptors.
          */
         
-        dup2(pipefd[0], 1);  
+        dup2(pipefd[1], 1);
         close(pipefd[0]);
         
 
@@ -275,7 +274,7 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          */
         
  
-        dup2(pipefd[1], 0);
+        dup2(pipefd[0], 0);
         close(pipefd[1]);
         
 

@@ -39,7 +39,7 @@ void stdout_redirection(char* filename) {
      */
 
     
-    int fd = open(filename, O_TRUNC | O-CREAT | O_WRONLY, 0644);
+    int fd = open(filename, O_TRUNC | O_CREAT | O_WRONLY, 0644);
     if(fd == -1) {
         printf("Error opening file for writing.");
     }
@@ -61,13 +61,12 @@ void stderr_redirection(char* filename) {
      * process writes to the file.
      */
 
-    close(2);
-    int fd = open(filename, O_TRUNC |  O-CREAT | O_WRONLY, 0644);
+    int fd = open(filename, O_TRUNC |  O_CREAT | O_WRONLY, 0644);
     if(fd == -1) {
         printf("Error opening file for writing.");
     }
-    dup(fd,2);
-    close(2);
+    dup2(fd,2);
+    close(fd);
 }
 
 /*
@@ -85,14 +84,13 @@ void stdout_stderr_redirection(char* filename) {
      * truncated before this process writes to the file.
      */
 
-    int fd = open(filename, O_TRUNC |  O-CREAT | O_WRONLY, 0644);
+    int fd = open(filename, O_TRUNC |  O_CREAT | O_WRONLY, 0644);
     if(fd == -1) {
         printf("Error opening file for writing.");
     }
     dup2(fd, 2);
     dup2(fd, 1);
-    close(1);
-    close(2);
+    close(fd);
     
 
 }
@@ -114,6 +112,6 @@ void stdin_redirection(char* filename) {
         printf("Error opening file for reading.\n");
     }
     dup2(fd, 0);
-    close(0);
+    close(fd);
 }
 
