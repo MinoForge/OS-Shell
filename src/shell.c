@@ -249,15 +249,10 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          * connect this processes standard output stream to the output side of the pipe in pipefd.
          * Close any unnecessary file descriptors.
          */
-//        int out = dup(1);
-        /* Might change to STDOUT_FILENO */
-        close(1);
-        dup2(pipefd[0], 1);      
         
-
-
-
-
+        dup2(pipefd[0], 1);  
+        close(pipefd[0]);
+        
 
         /*
          * TODO:  We're ready to start our pipeline!  Replace the call to the 'exit' system call
@@ -268,12 +263,7 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
             _exit(2);
         }
         
-        
-        
-//        close(1);
-//        dup2(out, 1);
-//        close(out);
-//        _exit(1);
+       
 
     } else {  /* Parent will keep going */
         char* args[MAX_ARGS];
@@ -283,15 +273,11 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          * connect this processes standard input stream to the input side of the pipe in pipefd.
          * Close any unnecessary file descriptors.
          */
-//        int in = dup(0);
-        /* Might change to STDOUT_FILENO */
-        close(0);
-        dup2(pipefd[1], 0);
         
-
-
-
-
+ 
+        dup2(pipefd[1], 0);
+        close(pipefd[1]);
+        
 
         /* Read the args for the next process in the pipeline */
         parse_args(args, line, lineIndex);
