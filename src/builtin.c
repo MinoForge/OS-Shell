@@ -53,7 +53,7 @@ void do_file_remove(char** args) {
     int i = 1;
     
     if(args[1] == NULL){
-        printf("Must provide the pathname of the file to be deleted.\n");
+        printf("USAGE: rm <pathname> [addtl_files]\n");
     }else{
         while(args[i] != NULL){
             if((unlink(args[i])) < 0){
