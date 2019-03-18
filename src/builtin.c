@@ -32,6 +32,8 @@ void do_file_list(char** args) {
         read = readdir(dir);
     }
 
+    free(dir);
+
 }
 
 /**
@@ -49,8 +51,6 @@ void do_file_remove(char** args) {
      * specified, print a usage message.
      */      
     int i = 1;
-
-//    printf("%d: %s", i, args[1]);
     
     if(args[1] == NULL){
         printf("Must provide the pathname of the file to be deleted.\n");
@@ -89,6 +89,8 @@ void do_touch(char** args) {
     struct stat stat_struct;
     struct utimbuf curr_time;
     //TODO set curr_time
+    curr_time.actime = UTIME_NOW;
+    curr_time.modtime = UTIME_NOW;
 
     if(args[i] == NULL) {
         printf("USAGE: touch <filename> [addtl_files]\n");

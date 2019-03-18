@@ -13,11 +13,13 @@ void append_redirection(char* filename) {
      * the specified name.  The output should be appended to the file if the file already exists.
      */
 
-    /*int out = dup(1);*/
-    close(1);
-    int fd = open(filename, O_APPEND);
+    int fd = open(filename, O_APPEND | O_CREAT | O_WRONLY, 0777);
+    dup2(fd, 1);
+    close(fd);
+
     if(fd == -1) {
-        printf("Error opening file for writing.");
+        printf("Error opening file for writing.\n");
+        fflush(stdout);
     }
 }
 
@@ -102,7 +104,7 @@ void stdin_redirection(char* filename) {
     close(0);
     int fd = open(filename, O_RDONLY);
     if(fd == -1) {
-        printf("Error opening file for reading.");
+        printf("Error opening file for reading.\n");
     }
 }
 

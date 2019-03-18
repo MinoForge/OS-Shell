@@ -139,11 +139,12 @@ int main(void) {
     }
 
     /* TODO Added to clean up history */
-    deleteLinkedQueue(get_history());
-//    free(get_history());
+    if(get_history()->private_data != NULL) {
+        deleteLinkedQueue(get_history());
+    }
 
     /* User must have typed "exit", time to gracefully exit. */
-    return 0;
+    exit(0);
 }
 
 

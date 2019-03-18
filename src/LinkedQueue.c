@@ -59,7 +59,9 @@ static void deleteNode(Node *delNode) {
     while(temp != NULL) {
         del = temp;
         temp = temp->next;
+        free(del->data);
         free(del);
+
     }
 }
 
@@ -168,19 +170,14 @@ static void linkedQueuePrint(queue_t *queue) {
     if(queue->private_data != NULL) {
         lQueue = queue->private_data;
         temp = lQueue->head;
-        /*printf("[");*/
         int i = 0;
 
         while (temp != NULL) {
             printf("%d: %s\n", i++, (temp->data));
             temp = temp->next;
-            /*if(temp != NULL) {
-                printf(", ");
-            }*/
         }
+        temp = NULL;
     } else {
         printf("%s", "No history to print.\n");
     }
-
-    /*printf("]\n");*/
 }

@@ -14,6 +14,7 @@ void write_history(char* new_line) {
     }
     char* line = Calloc(strlen(new_line)+1, sizeof(char));
     strcpy(line, new_line);
+    line[strlen(new_line)] = '\0';
     history.enqueue(&history, line);
     if(history.size(&history) > 40) {
         history.dequeue(&history);
