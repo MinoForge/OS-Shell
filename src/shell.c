@@ -54,9 +54,12 @@ void signal_handler(int sig){
         printf("Intercepted SIGINT, but was not passed SIGINT."); //Added to make -Wall happy
     }
     if(childPid != 0){
+        freopen("/dev/stdout", "a", stdout);
+        freopen("/dev/stdin", "r", stdin);
         kill(childPid, SIGKILL);
 //        childPid = 0;
     }
+
 }
 
 

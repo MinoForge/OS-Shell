@@ -30,7 +30,7 @@ static void deleteNode(Node*);
 
 static void linkedQueueEnqueue(queue_t *, char*);
 static void linkedQueueDequeue(queue_t *);
-static void linkedQueuePrint(queue_t *);
+static void linkedQueuePrint(queue_t *, int num);
 static size_t linkedQueueSize(queue_t *);
 static char* linkedQueuePeek(queue_t *);
 
@@ -164,9 +164,12 @@ static size_t linkedQueueSize(queue_t *queue) {
  * Function which traverses and prints out the contents of the given queue.
  * @param queue The queue whose contents are being printed out.
  */
-static void linkedQueuePrint(queue_t *queue) {
+static void linkedQueuePrint(queue_t *queue, int num) {
     LinkedQueue *lQueue;
     Node *temp;
+
+    if(num < 0)
+
     if(queue->private_data != NULL) {
         lQueue = queue->private_data;
         temp = lQueue->head;

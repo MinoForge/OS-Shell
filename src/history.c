@@ -16,7 +16,7 @@ void write_history(char* new_line) {
     strcpy(line, new_line);
     line[strlen(new_line)] = '\0';
     history.enqueue(&history, line);
-    if(history.size(&history) > 40) {
+    if(history.size(&history) > HIST_SIZE) {
         history.dequeue(&history);
     }
 }

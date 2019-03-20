@@ -130,14 +130,26 @@ void do_touch(char** args) {
  *        args[x] = NULL indicates the end of the argument list.
  */
 void do_history(char** args) {
-    /*                                                                          
-     * TODO: Write code here that will print the last n commands executed via this shell.
-     */
-    if(args[1] != NULL) {
+        /*
+         * TODO: Write code here that will print the last n commands executed via this shell.
+         */
+    int num;
+    if (args[1] != NULL) {
+        if ((int) args[1] < 0 || (int) args[1] > HIST_SIZE) {
+            perror("History argument out of range. Using maximum.");
+            num = HIST_SIZE;
+        } else {
+            num = (int)args[1];
+        }
+    } else {
+        num = HIST_SIZE;
+    }
+
+    if(args[2] != NULL) {
         printf("Ignoring extraneous arguments to history():\n");
     }
     queue_t *hist = get_history();
-    hist->print(hist);
+    hist->print(hist, num);
 
 }
 

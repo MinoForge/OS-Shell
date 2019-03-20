@@ -16,7 +16,7 @@ typedef void (*enqueue_func)(queue_t*, char*);
 typedef char* (*peek_func)(queue_t*);
 typedef void (*dequeue_func)(queue_t*);
 typedef size_t (*size_func)(queue_t*);
-typedef void (*print_func)(queue_t*);
+typedef void (*print_func)(queue_t*, int);
 
 /**
  * The queue struct. Contains pointers to functions, and a pointer to private
