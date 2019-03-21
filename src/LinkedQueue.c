@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include "LinkedQueue.h"
 #include "Malloc.h"
+#include "history.h"
 
 typedef struct Node Node;
 typedef struct LinkedQueue LinkedQueue;
@@ -30,7 +31,7 @@ static void deleteNode(Node*);
 
 static void linkedQueueEnqueue(queue_t *, char*);
 static void linkedQueueDequeue(queue_t *);
-static void linkedQueuePrint(queue_t *, int num);
+static void linkedQueuePrint(queue_t *, size_t);
 static size_t linkedQueueSize(queue_t *);
 static char* linkedQueuePeek(queue_t *);
 
@@ -143,6 +144,7 @@ static void linkedQueueDequeue(queue_t *queue) {
     Node *temp;
     lQueue = queue->private_data;
     temp = lQueue->head->next;
+    free(lQueue->head->data);
     free(lQueue->head);
     lQueue->head = temp;
     if(lQueue->head == NULL){
@@ -162,24 +164,29 @@ static size_t linkedQueueSize(queue_t *queue) {
 
 /**
  * Function which traverses and prints out the contents of the given queue.
- * @param queue The queue whose contents are being printed out.
+ * @param queue The queue whose contents are being printed out. //TODO update comment
  */
-static void linkedQueuePrint(queue_t *queue, int num) {
+static void linkedQueuePrint(queue_t *queue, size_t num) {
     LinkedQueue *lQueue;
     Node *temp;
-
-    if(num < 0)
+    size_t size = linkedQueueSize(queue);
 
     if(queue->private_data != NULL) {
         lQueue = queue->private_data;
         temp = lQueue->head;
-        int i = 0;
+        size_t i = 0;
+        while(i < (size - num)) {
+            temp = temp->next;
+//            printf("%d\n", (int)i);
+            i++;
 
-        while (temp != NULL) {
-            printf("%d: %s\n", i++, (temp->data));
+        }
+
+        while (temp != NULL && i < size) {
+            printf("%d: %s\n", (int) i++, (temp->data));
             temp = temp->next;
         }
-        temp = NULL;
+//        temp = NULL;
     } else {
         printf("%s", "No history to print.\n");
     }

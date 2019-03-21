@@ -18,7 +18,8 @@ void append_redirection(char* filename) {
         printf("Error opening file for writing.\n");
         fflush(stdout);
     }
-    dup2(fd, 1);
+    close(1);
+    dup_wrapper(fd);
     close(fd);
 
     
@@ -43,7 +44,8 @@ void stdout_redirection(char* filename) {
     if(fd == -1) {
         printf("Error opening file for writing.");
     }
-    dup2(fd,1);
+    close(1);
+    dup_wrapper(fd);
     close(fd);
     
 }
@@ -65,7 +67,8 @@ void stderr_redirection(char* filename) {
     if(fd == -1) {
         printf("Error opening file for writing.");
     }
-    dup2(fd,2);
+    close(2);
+    dup_wrapper(fd);
     close(fd);
 }
 
@@ -88,8 +91,10 @@ void stdout_stderr_redirection(char* filename) {
     if(fd == -1) {
         printf("Error opening file for writing.");
     }
-    dup2(fd, 2);
-    dup2(fd, 1);
+    close(1);
+    close(2);
+    dup_wrapper(fd);
+    dup_wrapper(fd);
     close(fd);
     
 
@@ -111,7 +116,8 @@ void stdin_redirection(char* filename) {
     if(fd == -1) {
         printf("Error opening file for reading.\n");
     }
-    dup2(fd, 0);
+    close(0);
+    dup_wrapper(fd);
     close(fd);
 }
 

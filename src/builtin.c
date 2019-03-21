@@ -1,4 +1,7 @@
-    #include "shell.h"
+#include <time.h>
+#include <errno.h>
+#include <asm/errno.h>
+#include "shell.h"
     
 /**
  * do_file_list
@@ -21,18 +24,30 @@ void do_file_list(char** args) {
         dir = opendir("./");
     } else{
         dir = opendir(args[1]);
-        if(dir == NULL){
-            printf("The directory %s does not exist\n", args[1]);
-        }
-    }
-    
-    read = readdir(dir);
-    while(read != NULL){
-        printf("%s\n", read->d_name);
-        read = readdir(dir);
+
     }
 
-    free(dir);
+
+    if(dir == NULL){
+        if(errno == ENOENT) {
+            fprintf(stderr, "ls: cannot access \'%s\': No such file or directory\n", args[1]);
+        } else if(errno == EACCES) {
+            fprintf(stderr, "ls: cannot open directory \'%s\': Permission denied\n", args[1]);
+        } else if(errno == ENOTDIR) {
+            printf("%s\n", args[1]);
+        } else {
+            fprintf(stderr, "ls: Unimplemented error: see 'man opendir' for possibilities\n");
+        }
+    } else {
+        read = readdir(dir);
+        while(read != NULL){
+            printf("%s\n", read->d_name);
+            read = readdir(dir);
+        }
+
+        free(dir);
+    }
+
 
 }
 
@@ -53,11 +68,17 @@ void do_file_remove(char** args) {
     int i = 1;
     
     if(args[1] == NULL){
-        printf("USAGE: rm <pathname> [addtl_files]\n");
+        fprintf(stderr, "USAGE: rm <pathname> [addtl_files]\n");
     }else{
         while(args[i] != NULL){
             if((unlink(args[i])) < 0){
-                printf("\"%s\" does not exist.", args[i]);
+                if(errno == ENOENT) {
+                    fprintf(stderr, "rm: cannot remove \'%s\': No such file or directory\n", args[i]);
+                } else if(errno == EACCES) {
+                    fprintf(stderr, "rm: cannot remove \'%s\': Permission denied\n", args[1]);
+                } else {
+                    fprintf(stderr, "rm: Unimplemented error\n");
+                }
             }
             i++;
         }
@@ -88,21 +109,20 @@ void do_touch(char** args) {
     int status = 0;
     struct stat stat_struct;
     struct utimbuf curr_time;
-    //TODO set curr_time
-    curr_time.actime = UTIME_NOW;
-    curr_time.modtime = UTIME_NOW;
+    curr_time.actime = time(NULL);
+    curr_time.modtime = time(NULL);
 
     if(args[i] == NULL) {
-        printf("USAGE: touch <filename> [addtl_files]\n");
+        fprintf(stderr, "USAGE: touch <filename> [addtl_files]\n");
     }
 
     while(args[i] != NULL) {
         status = stat(args[i], &stat_struct);
 
         if(status == -1) {
-            status = close(open(args[i], O_CREAT));
+            status = close(open(args[i], O_CREAT, 0644));
             if(status == -1) {
-                printf("You do not have permission to create files in this directory.\n");
+                fprintf(stderr, "touch: cannot touch \'%s\': Permission denied\n", args[i]);
             }
         }
 
@@ -133,25 +153,32 @@ void do_history(char** args) {
         /*
          * TODO: Write code here that will print the last n commands executed via this shell.
          */
-    int num;
+    size_t size;
+    queue_t *hist = get_history();
+    size_t curr_size = hist->size(hist);
+
+
     if (args[1] != NULL) {
-        if ((int) args[1] < 0 || (int) args[1] > HIST_SIZE) {
-            perror("History argument out of range. Using maximum.");
-            num = HIST_SIZE;
+        int num = atoi(args[1]);
+        if (num < 0 || num > HIST_SIZE) {
+            fprintf(stderr, "History argument out of range. Using maximum:\n");
+            size = curr_size;
         } else {
-            num = (int)args[1];
+            if (num > (int) curr_size) {
+                size = curr_size;
+            } else {
+                size = (size_t) num;
+            }
+        }
+        if(args[2] != NULL) {
+            fprintf(stderr, "USAGE: history [0-%d]\n", HIST_SIZE);
         }
     } else {
-        num = HIST_SIZE;
+        size = hist->size(hist);
     }
 
-    if(args[2] != NULL) {
-        printf("Ignoring extraneous arguments to history():\n");
-    }
-    queue_t *hist = get_history();
-    hist->print(hist, num);
+
+
+    hist->print(hist, size);
 
 }
-
-
-//TODO Make a main, that picks the right thing?

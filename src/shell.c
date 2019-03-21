@@ -48,16 +48,11 @@
  */
 static pid_t childPid = 0;
 
-
+//TODO comment
 void signal_handler(int sig){
-    if(sig != SIGINT) {
-        printf("Intercepted SIGINT, but was not passed SIGINT."); //Added to make -Wall happy
-    }
     if(childPid != 0){
-        freopen("/dev/stdout", "a", stdout);
-        freopen("/dev/stdin", "r", stdin);
-        kill(childPid, SIGKILL);
-//        childPid = 0;
+        kill(childPid, sig);
+        childPid = 0;
     }
 
 }
@@ -93,9 +88,8 @@ int main(void) {
 
             /* Dig out the arguments for a single process */
             parse_args(args, line, &lineIndex);
-
             /* TODO: Somewhere here remember commands executed*/
-            write_history(*line);
+            write_history(line);
 
             /* Determine which command we are running*/
             if (strcmp(args[0], "ls") == 0) {
@@ -240,7 +234,7 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
      * TODO: Write code here that will create a pipe -- a unidirectional data channel that can be
      * used for interprocess communication.
      */
-    pipe(pipefd);
+    pipe_wrapper(pipefd);
 
     /* Fork the current process */
     pid = fork_wrapper();
@@ -261,9 +255,10 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
          * below with code to replace this in-memeory process image with an instance of the
          * specified program.  (Here, in p1Args)
          */
-        if(execvp(p1Args[0], p1Args)) {
-            _exit(2);
-        }
+        execvp(p1Args[0], p1Args);
+        perror(*p1Args);
+        _exit(2);
+
         
        
 
