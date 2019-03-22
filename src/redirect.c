@@ -1,3 +1,10 @@
+/**
+ * Implementation of file redirection for our shell.
+ *
+ * @author Peter Gardner
+ * @author Caleb Dinehart
+ * @version March 22, 2019
+ */
 #include "shell.h"
 
 /*
