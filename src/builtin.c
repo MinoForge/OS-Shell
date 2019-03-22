@@ -1,3 +1,10 @@
+/**
+ * Implementations of the four built in functions of our shell.
+ *
+ * @author Peter Gardner
+ * @author Caleb Dinehart
+ * @version March 22, 2019
+ */
 #include <time.h>
 #include <errno.h>
 #include <asm/errno.h>
