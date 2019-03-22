@@ -1,5 +1,5 @@
 /**
- * This file contains code for a linkedlist implementation of a FIFO Queue.
+ * This file contains code for a linkedlist implementation of a FIFO Queue. Modified to hold the history of a shell.
  *
  * Written originally by:
  * @author Peter Gardner
@@ -170,7 +170,8 @@ static size_t linkedQueueSize(queue_t *queue) {
 
 /**
  * Function which traverses and prints out the contents of the given queue.
- * @param queue The queue whose contents are being printed out. //TODO update comment
+ * @param queue The queue whose contents are being printed out.
+ * @param num The number of elements before the current command to be printed.
  */
 static void linkedQueuePrint(queue_t *queue, size_t num) {
     LinkedQueue *lQueue;
@@ -183,7 +184,6 @@ static void linkedQueuePrint(queue_t *queue, size_t num) {
         size_t i = 0;
         while(i < (size - num)) {
             temp = temp->next;
-//            printf("%d\n", (int)i);
             i++;
 
         }
@@ -192,7 +192,6 @@ static void linkedQueuePrint(queue_t *queue, size_t num) {
             printf("%d: %s\n", (int) i++, (temp->data));
             temp = temp->next;
         }
-//        temp = NULL;
     } else {
         printf("%s", "No history to print.\n");
     }
