@@ -41,37 +41,32 @@
 #define PARENT_PID(pid) ((pid) > 0)
 #define CHILD_PID(pid)  ((pid) == 0)
 
-
 /*
  * A global variable representing the process ID of this shell's child.
  * When the value of this variable is 0, there are no running children.
  */
 static pid_t childPid = 0;
 
-//TODO comment
+/*
+* Signal handler that handles the SIGINT signal.
+*/
 void signal_handler(int sig){
+    /* Check if you are the parent */
     if(childPid != 0){
+        /* Send the signal received to the child process*/
         kill(childPid, sig);
+        /* Change the child pid back to zero */
         childPid = 0;
     }
-
 }
-
-
 
 /*
  * Entry point of the application
  */
 int main(void) {
     char** line;
-
-    /*
-     * TEST  TODO:  Define a signal handler function below, add a function prototype above, and call the
-     * 'signal' system call here to put that handler in place for the SIGINT signal.  (The SIGINT
-     * signal is what gets sent to a process when you hit Ctrl-C).  The implementation of your
-     * signal hander should deliver the received signal to the process with pid 'childPid'
-     * (above).  Note that when 'childPid' contains 0, the signal should be ignored.
-     */
+    
+    /* Call to the 'signal' system call for the SIGINT signal.*/
     signal(SIGINT, signal_handler);
 
     /* Read a line of input from the keyboard */
@@ -110,22 +105,13 @@ int main(void) {
 //                    printf("%s", "Child started");
                     process_line(line, &lineIndex, args);
                 } else {
-
-                    /*
-                     * TODO:  Write code here to wait for the child process to die.  When the
-                     * child finally does die, include a printf that prints a message like:
-                     *
-                     *            "Child 123 exited with status 0"
-                     *
-                     *        Where 123 here is the process id of the child and 0 is the exit
-                     *        status of that process.
-                     */
+                                    
+                    /* initialize status */
                     status = 0;
+                    /* Wait for the child to die and save its pid and return status */
                     pid_t reaped = wait(&status);
+                    /* Print the childs pid and what status the exited with */
                     printf("Child %d exited with status %d\n", (int)reaped, status);
-                    
-                   
-
                 }
             }
         }
@@ -134,7 +120,7 @@ int main(void) {
         line = prompt_and_read();
     }
 
-    /* TODO Added to clean up history */
+    /* Added to clean up history */
     if(get_history()->private_data != NULL) {
         deleteLinkedQueue(get_history());
     }
@@ -162,15 +148,10 @@ int main(void) {
  */
 void process_line(char **line, int *lineIndex, char **args) {
     if (line[*lineIndex] == NULL) { /* Base case -- nothing left in line */
-        /*
-         * TEST?? TODO:  We've read the end of a command line.  Here args is an array of strings
-         * corresponding to the command line arguments of a process that needs to get started.
-         * Replace the call to the 'exit' system call below with code to replace this in-memory
-         * process image with an instance of the specified program.
-         */
-        if(execvp(args[0], args)) {
-            _exit(1);
-        }
+        
+        /* use execvp to replace the current process image with the specified program */
+        execvp(args[0], args);
+        _exit(1);
 
     } else if (strcmp(line[*lineIndex], ">>") == 0) {
         (*lineIndex)++;
@@ -230,31 +211,20 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
     int   pipefd[2]; /* Array of integers to hold 2 file descriptors. */
     pid_t pid;       /* PID of a child process */
 
-    /*
-     * TODO: Write code here that will create a pipe -- a unidirectional data channel that can be
-     * used for interprocess communication.
-     */
+    /* Create the pipe */
     pipe_wrapper(pipefd);
 
     /* Fork the current process */
     pid = fork_wrapper();
 
     if (CHILD_PID(pid)) { /* Child -- will execute left-hand-side process */
-        /*
-         * TODO:  This process will handles the left-hand-side of this pipe.  Write code here to
-         * connect this processes standard output stream to the output side of the pipe in pipefd.
-         * Close any unnecessary file descriptors.
-         */
-        
-        dup2(pipefd[1], 1);
+
+        /* Redirect this processes output stream to the output side of pipefd */
+        close(1);
+        dup_wrapper(pipefd[1]);
         close(pipefd[0]);
         
-
-        /*
-         * TODO:  We're ready to start our pipeline!  Replace the call to the 'exit' system call
-         * below with code to replace this in-memeory process image with an instance of the
-         * specified program.  (Here, in p1Args)
-         */
+       /* Replace the process image with execvp, exits if exec call fails */
         execvp(p1Args[0], p1Args);
         perror(*p1Args);
         _exit(2);
@@ -265,14 +235,9 @@ void do_pipe(char** p1Args, char** line, int* lineIndex) {
     } else {  /* Parent will keep going */
         char* args[MAX_ARGS];
 
-        /*
-         * TODO:  This process will handles the right-hand-side of this pipe.  Write code here to
-         * connect this processes standard input stream to the input side of the pipe in pipefd.
-         * Close any unnecessary file descriptors.
-         */
-        
- 
-        dup2(pipefd[0], 0);
+        /* Redirect this processes input stream to the input side of pipefd */
+        close(0);
+        dup_wrapper(pipefd[0]);
         close(pipefd[1]);
         
 
@@ -332,7 +297,6 @@ pid_t fork_wrapper(void) {
         perror("fork");
         _exit(2);
     }
-
     return pid;
 }
 
@@ -343,22 +307,12 @@ pid_t fork_wrapper(void) {
  * prints an appropriate message and terminates the process.
  */
 void pipe_wrapper(int pipefds[]) {
-    /*                                                                          
-     * TODO: Write code here that will create a pipe -- a unidirectional data channel that can
-     * be used for interprocess communication. Check the return value of pipe -- if it
-     * is less than 0, use perror() to print an error message and the _exit system call to
-     * terminate the program.                                             
-     */                                                                         
     int p = pipe(pipefds);
     
     if(p < 0){
         perror("pipe");
         _exit(1);
     }
-    
-
-
-
 }
 
 /*
@@ -368,18 +322,12 @@ void pipe_wrapper(int pipefds[]) {
  * prints an appropriate message and terminates the process.
  */
 int dup_wrapper(int oldfd) {
-    /*                                                                          
-     * TODO: Write code here that will duplicate a file descriptor and return a new one, assuming
-     * nothing has gone wrong.  Check the return value of dup -- if it is less than 0, use perror()
-     * to print an error message and the _exit system call to terminate the program.
-     */                                                                         
     int newfd;
     if((newfd = dup(oldfd)) < 0){
         perror("dup");
         _exit(1);
     }
     return newfd;
-
 }
 
 /*
