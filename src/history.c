@@ -12,8 +12,6 @@
  * @version March 22, 2019
  */
 
-// TODO: Stuff in here to save and list history
-
 /** A queue to hold the history of commands sent to the shell. */
 static queue_t history;
 

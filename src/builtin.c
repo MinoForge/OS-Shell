@@ -106,10 +106,6 @@ void do_file_remove(char** args) {
  *        args[x] = NULL indicates the end of the argument list.
  */
 void do_touch(char** args) {
-    /*                                                                          
-     * TODO: Write code here that will modify the access time of a file(s) if it exists, or create
-     * the file(s) if it/they does not exist.  If no file list is specified, print a usage message.
-     */                                                                         
     int i = 1; /* The first argument to touch */
     int status = 0;
     struct stat stat_struct;
@@ -157,9 +153,6 @@ void do_touch(char** args) {
  *        args[x] = NULL indicates the end of the argument list.
  */
 void do_history(char** args) {
-        /*
-         * TODO: Write code here that will print the last n commands executed via this shell.
-         */
     /** Variables for reading the history */
     size_t size;
     queue_t *hist = get_history();
