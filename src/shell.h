@@ -1,3 +1,10 @@
+/**
+ * An implementation of a simple UNIX shell.
+ *
+ * @author Peter Gardner
+ * @author Caleb Dinehart
+ * @version March 22, 2019
+ */
 #ifndef SHELL_H
     #define SHELL_H
     #include <stdio.h>
