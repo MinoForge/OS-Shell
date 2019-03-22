@@ -12,22 +12,19 @@
  *        If args[1] is NULL, the current directory (./) is assumed; otherwise
  *        it specifies the directory to list.
  */
-void do_file_list(char** args) {
-    /*                                                                          
-     * TODO: Write code here that will list the content of the specified directory (or if no
-     * directory was specified, the current directory).
-     */                 
+void do_file_list(char** args) { 
+    
     DIR *dir = NULL;
     struct dirent *read = NULL;
     
+    /*Check if a directory was specified, then ope the directory with the 'opendir' system call*/
     if(args[1] == NULL){
         dir = opendir("./");
     } else{
         dir = opendir(args[1]);
-
     }
 
-
+    /* Code to check for errors */
     if(dir == NULL){
         if(errno == ENOENT) {
             fprintf(stderr, "ls: cannot access \'%s\': No such file or directory\n", args[1]);
@@ -39,8 +36,10 @@ void do_file_list(char** args) {
             fprintf(stderr, "ls: Unimplemented error: see 'man opendir' for possibilities\n");
         }
     } else {
+        /* Use the 'readdir' system call to move through the files in the opened directory */
         read = readdir(dir);
         while(read != NULL){
+            /* print the file name */
             printf("%s\n", read->d_name);
             read = readdir(dir);
         }
@@ -61,17 +60,16 @@ void do_file_list(char** args) {
  *        args[x] = NULL indicates the end of the argument list.
  */
 void do_file_remove(char** args) {
-    /*                                                                          
-     * TODO: Write code here that will remove the specified list of files.  If no file list is
-     * specified, print a usage message.
-     */      
+          
     int i = 1;
     
     if(args[1] == NULL){
         fprintf(stderr, "USAGE: rm <pathname> [addtl_files]\n");
     }else{
         while(args[i] != NULL){
+            /* Using the 'unlink' system call to remove the files from the directory */
             if((unlink(args[i])) < 0){
+                /* Error checking */
                 if(errno == ENOENT) {
                     fprintf(stderr, "rm: cannot remove \'%s\': No such file or directory\n", args[i]);
                 } else if(errno == EACCES) {
