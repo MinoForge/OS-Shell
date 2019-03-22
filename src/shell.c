@@ -1,3 +1,10 @@
+/**
+ * Implementation of a simple UNIX shell.
+ *
+ * @author Peter Gardner
+ * @author Caleb Dinehart
+ * @version March 22, 2019
+ */
 /*
  * shell.c
  *
