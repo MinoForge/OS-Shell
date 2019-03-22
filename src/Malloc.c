@@ -1,11 +1,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 /**
- * Contains code for a safe implementation of malloc().
+ * Contains code for a safe implementation of malloc(), realloc(), and calloc().
  *
+ * Originally written by:
  * @author Peter Gardner
  * @author Wesley Rogers
  * @version February 27, 2019
+ *
+ * Modified by:
+ * @author Peter Gardner
+ * @author Wesley Rogers
+ * @modified March 22, 2019
  */
 
 /**

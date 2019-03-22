@@ -1,9 +1,15 @@
 /**
  * Header file for LinkedQueue.
  *
+ * Originally written by:
  * @author Peter Gardner
  * @author Wesley Rogers
  * @version February 27, 2019
+ *
+ * Used, but unmodified by:
+ * @author Peter Gardner
+ * @author Caleb Dinehart
+ * @modified March 22, 2019
  */
 
 #ifndef OPERATINGSYSTEMS_QUEUE_LINKEDQUEUE_H

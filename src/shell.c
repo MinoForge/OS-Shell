@@ -89,6 +89,7 @@ int main(void) {
             /* Dig out the arguments for a single process */
             parse_args(args, line, &lineIndex);
             /* TODO: Somewhere here remember commands executed*/
+
             write_history(line);
 
             /* Determine which command we are running*/

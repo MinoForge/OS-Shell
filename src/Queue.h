@@ -1,9 +1,15 @@
 /**
  * Header file which defines the queue struct, which ArrayQueue and LinkedQueue use heavily.
  *
+ * Originally written by:
  * @author Peter Gardner
  * @author Wesley Rogers
  * @version February 27, 2019
+ *
+ * Modified by:
+ * @author Peter Gardner
+ * @author Caleb Dinehart
+ * @modified March 22, 2019
  */
 
 #ifndef OPERATINGSYSTEMS_QUEUE_QUEUE_H

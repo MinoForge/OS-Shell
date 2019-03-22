@@ -45,7 +45,7 @@ void do_file_list(char** args) {
             read = readdir(dir);
         }
 
-        free(dir);
+        closedir(dir);
     }
 
 
@@ -105,28 +105,30 @@ void do_touch(char** args) {
      * TODO: Write code here that will modify the access time of a file(s) if it exists, or create
      * the file(s) if it/they does not exist.  If no file list is specified, print a usage message.
      */                                                                         
-    int i = 1;
+    int i = 1; /* The first argument to touch */
     int status = 0;
     struct stat stat_struct;
+
+    /* Struct to hold the current time. */
     struct utimbuf curr_time;
     curr_time.actime = time(NULL);
     curr_time.modtime = time(NULL);
 
-    if(args[i] == NULL) {
+    if(args[i] == NULL) { /* Usage */
         fprintf(stderr, "USAGE: touch <filename> [addtl_files]\n");
     }
 
-    while(args[i] != NULL) {
+    while(args[i] != NULL) { /* loop for all files given */
         status = stat(args[i], &stat_struct);
 
-        if(status == -1) {
+        if(status == -1) { /* If file does not exist, create the file. */
             status = close(open(args[i], O_CREAT, 0644));
-            if(status == -1) {
+            if(status == -1) { /* If file could not be created */
                 fprintf(stderr, "touch: cannot touch \'%s\': Permission denied\n", args[i]);
             }
         }
 
-        utime(args[i], &curr_time);
+        utime(args[i], &curr_time); /* Set modified time to current. */
         i++;
     }
 
@@ -153,32 +155,31 @@ void do_history(char** args) {
         /*
          * TODO: Write code here that will print the last n commands executed via this shell.
          */
+    /** Variables for reading the history */
     size_t size;
     queue_t *hist = get_history();
     size_t curr_size = hist->size(hist);
 
 
-    if (args[1] != NULL) {
-        int num = atoi(args[1]);
-        if (num < 0 || num > HIST_SIZE) {
+    if (args[1] != NULL) { /* If they give us at least one argument */
+        int num = atoi(args[1]); /* Tries to get an integer out of the first arg */
+        if (num < 0 || num > HIST_SIZE) { /* If num out of range */
             fprintf(stderr, "History argument out of range. Using maximum:\n");
             size = curr_size;
-        } else {
-            if (num > (int) curr_size) {
+        } else { /* If num in range */
+            if (num > (int) curr_size) {  /*num larger than how many elements are in history: use current size. */
                 size = curr_size;
-            } else {
+            } else { /* num smaller than current size */
                 size = (size_t) num;
             }
         }
-        if(args[2] != NULL) {
+        if(args[2] != NULL) { /* Gave too many arguments */
             fprintf(stderr, "USAGE: history [0-%d]\n", HIST_SIZE);
         }
-    } else {
+    } else { /* No arguments given */
         size = hist->size(hist);
     }
 
-
-
-    hist->print(hist, size);
+    hist->print(hist, size); /* Print the history. Modified from queues original print. */
 
 }

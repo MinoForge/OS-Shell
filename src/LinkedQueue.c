@@ -1,9 +1,15 @@
 /**
  * This file contains code for a linkedlist implementation of a FIFO Queue.
  *
+ * Written originally by:
  * @author Peter Gardner
  * @author Wesley Rogers
  * @version February 27, 2019
+ *
+ * Modified by:
+ * @author Peter Gardner
+ * @author Caleb Dinehart
+ * @modified March 22, 2019
  */
 #include <stdio.h>
 #include "LinkedQueue.h"
